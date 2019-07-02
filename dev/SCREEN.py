@@ -77,6 +77,7 @@ class SCREEN:
         # explore dirty sprites
         for layer in self.level.layers:
                 self.drawScrollLayer(layer)
+        self.level.static_sprites.draw()
 
         pg.display.flip()
         keys = pg.key.get_pressed()
@@ -91,6 +92,8 @@ class SCREEN:
         # explore dirty sprites
         for layer in self.level.layers:
                 self.drawScrollLayer(layer)
+        self.level.static_sprites.draw(self.screen)
+        self.level.text_layer.draw(self.screen)
 
         pg.display.flip()
         keys = pg.key.get_pressed()

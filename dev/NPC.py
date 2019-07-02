@@ -1,5 +1,6 @@
 from newSprite import newSprite
 import pygame as pg
+from textBox import Textbox
 
 class Npc(newSprite):
     def __init__(self, x, y, image, interaction = None, level = None, frames = 1, interactionBuffer = 20, frameSpeed = 100):
@@ -19,6 +20,8 @@ class Npc(newSprite):
         self.y = y
         self.rect.x = x
         self.rect.y = y
+
+
         self.interaction = lambda:print(self.rect)
 
         # interaction rect

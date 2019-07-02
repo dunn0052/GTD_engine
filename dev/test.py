@@ -8,6 +8,7 @@ ctr = Controller(0)
 
 # create the game object
 s = SCREEN()
+
 l = LEVEL(backgroundImage = "images//pkBg.png", layerNum = 7, controller = ctr, spriteSheetPath = "images//BWBG.png", tileHeight = 80, tileWidth = 80)
 l.makeEnt("PLAYER", "images//csBig.png", x = 200, y =350, spd = 500, frameSpeed = 50)
 l2 = LEVEL(backgroundImage = "images//house.png", layerNum = 7, controller = ctr, spriteSheetPath = "images//BWBG.png", tileHeight = 80, tileWidth = 80)
@@ -18,6 +19,7 @@ l.loadWalls('maps//pkBg_Tile Layer 2.csv')
 l.loadTriggers('maps//pkBg_Tile Layer 5.csv')
 l.loadNpcs('maps//pkBg_Tile Layer 4.csv')
 l.loadOver('maps//pkBg_Tile Layer 3.csv')
+l.NPC_LAYER.get_sprite(0).setInteraction(lambda: l.makeText())
 l.makeEnt(entType = "ANIMATION", image = "images//wheel.png", x = 880, y = 1200, frames = 4, frameSpeed = 100)
 l2.loadWalls('maps//house_Tile Layer 2.csv')
 l2.loadTriggers('maps//house_Tile Layer 4.csv')

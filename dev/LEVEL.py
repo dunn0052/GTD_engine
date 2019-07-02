@@ -5,6 +5,7 @@ import NPC
 import TRIGGER
 import over
 import mele
+from textBox import Textbox
 import pygame as pg
 from controllerIO import Controller as ct
 from functools import partial
@@ -24,6 +25,8 @@ class LEVEL:
         self.all_sprites = pg.sprite.Group()
         self.solid_sprites = pg.sprite.Group()
         self.animated_sprites = pg.sprite.Group()
+        self.static_sprites = pg.sprite.OrderedUpdates() # maybe layeredUpdates?
+        self.text_layer = pg.sprite.GroupSingle()
         # draw layers
         self.layers = []
         for i in range(layerNum):
@@ -57,6 +60,9 @@ class LEVEL:
             self.sheet = spritesheet(spriteSheetPath, tileHeight, tileWidth)
             self.tiles = self.sheet.get_tiles()
 
+    def getInput(self):
+        self.PC.getButtonsPressed(self.controllers[0])
+
     def setPC(self, PC, x, y):
         self.PC = PC
         self.PC.level = self
@@ -84,7 +90,7 @@ class LEVEL:
             self.PC = entity
             self.PC.moveTo(x, y)
         elif entType == "NPC":
-            entity = NPC.Npc(image, x, y, frames, direction, cycle, spd)
+            entity = NPC.Npc(image, x, y, frames, direction, cycle, spd, level = self)
             self.all_sprites.add(entity)
             self.NPC_LAYER.add(entity)
         elif entType == "TRIGGER":
@@ -92,7 +98,7 @@ class LEVEL:
             self.all_sprites.add(entity)
             self.TRIGGER_LAYER.add(entity)
         elif entType == "ANIMATION":
-            entity = NPC.Npc(image = image, x = x, y = y, frames = frames)
+            entity = NPC.Npc(image = image, x = x, y = y, frames = frames, level = self)
             self.all_sprites.add(entity)
             self.NPC_LAYER.add(entity)
             self.animated_sprites.add(entity)
@@ -101,6 +107,7 @@ class LEVEL:
             entity = mele.Mele(image = image, x = x, y = y, frames = frames, frameSpeed = 10)
             self.all_sprites.add(entity)
             self.NPC_LAYER.add(entity)
+
 
 
     # Level has a map class to help design levels
@@ -141,7 +148,7 @@ class LEVEL:
         for row, tiles in enumerate(data):
                     for col, tile in enumerate(tiles):
                         if int(tile) > -1:
-                            ent = NPC.Npc(x = col * self.tileHeight, y = row * self.tileWidth, image = self.tiles[int(tile)])
+                            ent = NPC.Npc(x = col * self.tileHeight, y = row * self.tileWidth, image = self.tiles[int(tile)], level = self)
                             self.NPC_LAYER.add(ent)
                             self.all_sprites.add(ent)
                             self.solid_sprites.add(ent)
@@ -154,3 +161,13 @@ class LEVEL:
                             ent = over.Over(x = col * self.tileHeight, y = row * self.tileWidth, image = self.tiles[int(tile)])
                             self.OVER_LAYER.add(ent)
                             self.all_sprites.add(ent)
+
+    def makeText(self):
+        sampleText = "NPC: This is a really long sentence with a couple of breaks.\nSometimes it will break even if there isn't a break " \
+        "in the sentence, but that's because the text is too long to fit the screen.\nIt can look strange sometimes.\n" \
+        "You can press B to clear the text screen and begin writing the new text." \
+        "When the text finally finishes, the screen will be killed and a new screen can continue. \n I should have the NPC name begin at every new screen." \
+        "\n I don't know, but I will check out Chrono Trigger or whatever to see what they do."
+        self.text = Textbox(text = sampleText)
+        self.all_sprites.add(self.text)
+        self.text_layer.add(self.text)

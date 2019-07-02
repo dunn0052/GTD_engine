@@ -1,6 +1,7 @@
 from newSprite import newSprite
 import pygame as pg
 
+
 class PC(newSprite):
     def __init__(self, x, y, image, spd, direction, frames, cycle, level = None, controller = None, frameSpeed = 100):
         self.level = level
@@ -109,7 +110,7 @@ class PC(newSprite):
             self.npcTrigger()
 
         if c.B in self.buttons:
-            print("B")
+            self.level.text.nextScreen()
         if c.X in self.buttons:
             print("X")
         if c.Y in self.buttons:
