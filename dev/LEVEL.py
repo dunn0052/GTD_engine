@@ -16,7 +16,6 @@ import os
 
 class LEVEL:
     def __init__(self, backgroundImage = None, layerNum = 7, controller = None, spriteSheetPath = None, tileHeight = 0, tileWidth = 0):
-
         # controller access
         self.controllers = []
         if controller:
@@ -60,15 +59,23 @@ class LEVEL:
             self.sheet = spritesheet(spriteSheetPath, tileHeight, tileWidth)
             self.tiles = self.sheet.get_tiles()
 
-    def getInput(self):
-        self.PC.getButtonsPressed(self.controllers[0])
+    def doCommands(self, context):
+        # get input
+        buttons = self.controllers[0].getInput()
+        for button in buttons:
+            context.doCommand(button)
+
+    def setControllerContext(self, context):
+        self.context = context
 
     def setPC(self, PC, x, y):
         self.PC = PC
         self.PC.level = self
-        self.PC_LAYER.add(PC)
-        self.all_sprites.add(PC)
+        self.PC_LAYER.add(self.PC)
+        self.all_sprites.add(self.PC)
+        self.animated_sprites.add(self.PC)
         self.PC.moveTo(x, y)
+        self.setControllerContext(self.PC)
 
 
     def addExit(self,level):
@@ -84,11 +91,7 @@ class LEVEL:
             self.WALL_LAYER.add(entity)
         elif entType == "PLAYER":
             entity = PC(x, y, image, spd, direction, frames, cycle, level = self, frameSpeed = frameSpeed)
-            self.all_sprites.add(entity)
-            self.animated_sprites.add(entity)
-            self.PC_LAYER.add(entity)
-            self.PC = entity
-            self.PC.moveTo(x, y)
+            self.setPC(entity, x, y)
         elif entType == "NPC":
             entity = NPC.Npc(image, x, y, frames, direction, cycle, spd, level = self)
             self.all_sprites.add(entity)
@@ -165,9 +168,10 @@ class LEVEL:
     def makeText(self):
         sampleText = "NPC: This is a really long sentence with a couple of breaks.\nSometimes it will break even if there isn't a break " \
         "in the sentence, but that's because the text is too long to fit the screen.\nIt can look strange sometimes.\n" \
-        "You can press B to clear the text screen and begin writing the new text." \
-        "When the text finally finishes, the screen will be killed and a new screen can continue. \n I should have the NPC name begin at every new screen." \
-        "\n I don't know, but I will check out Chrono Trigger or whatever to see what they do."
-        self.text = Textbox(text = sampleText)
+        "You can press A to clear the text screen and begin writing the new text." \
+        "When the text finally finishes, the screen will be killed and a new screen can continue. \nI should have the NPC name begin at every new screen." \
+        "\nI don't know, but I will check out Chrono Trigger or whatever to see what they do."
+        self.text = Textbox(text = sampleText, backgroundImage = "images//textBackground.png", offset = 65, level = self)
         self.all_sprites.add(self.text)
         self.text_layer.add(self.text)
+        self.setControllerContext(self.text)

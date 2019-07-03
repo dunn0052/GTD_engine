@@ -31,6 +31,10 @@ class newSprite(pygame.sprite.Sprite):
       # min ms of a frame
       self.frameCap = 10
 
+      # commands
+      self.commands = commands = {"A":self.doA,"B":self.doB,"X":self.doX,"Y":self.doY,"DOWN":self.doDOWN,"UP":self.doUP,"LEFT":self.doLEFT,"RIGHT":self.doRIGHT,"L":self.doL,"R":self.doR,"START":self.doSTART, "SELECT":self.doSELECT}
+
+
 
     def parseColour(self,colour):
       if type(colour) == str:
@@ -116,10 +120,36 @@ class newSprite(pygame.sprite.Sprite):
         if self.screenRefresh:
             pygame.display.update()
 
-    def scroll(self, screen,x, y):
-        self.X += x
-        self.Y += y
-        self.move(self.X, self.Y, centre = True)
+
+
+# virtual functions for button inputs
+    def doCommand(self, button):
+        self.commands[button]()
+
+    def doA(self):
+        pass
+    def doB(self):
+        pass
+    def doX(self):
+        pass
+    def doY(self):
+        pass
+    def doLEFT(self):
+        pass
+    def doRIGHT(self):
+        pass
+    def doUP(self):
+        pass
+    def doDOWN(self):
+        pass
+    def doL(self):
+        pass
+    def doR(self):
+        pass
+    def doSTART(self):
+        pass
+    def doSELECT(self):
+        pass
 
     def animate(self):
         pass

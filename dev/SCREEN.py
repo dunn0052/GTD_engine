@@ -52,15 +52,14 @@ class SCREEN:
         controller.setCommands(commands)
 
     def doCommands(self):
-        for ctr in self.controllers:
-            ctr.doWork(ctr.commands)
+        self.level.doCommands(self.level.context)
 
     def run(self):
         # game loop - set self.playing = False to end the game
         self.playing = True
         while self.playing:
             self.level.dt = self.clock.tick(self.FPS) / 1000
-            self.events()
+            self.doCommands()
             self.update()
             self.updateDisplay()
 
@@ -131,12 +130,3 @@ class SCREEN:
     def quit(self):
         pg.quit()
         sys.exit()
-
-    def events(self):
-        # catch all events here
-        for event in pg.event.get():
-            if event.type == pg.QUIT:
-                self.quit()
-            if event.type == pg.KEYDOWN:
-                if event.key == pg.K_ESCAPE:
-                    self.quit()

@@ -23,18 +23,18 @@ class Controller:
     # number = controller number
     def __init__(self, number, keyboard = False):
         # button enums
-        self.X = auto()
-        self.A = auto()
-        self.B = auto()
-        self.Y = auto()
-        self.L = auto()
-        self.R = auto()
-        self.SELECT = auto()
-        self.START = auto()
-        self.RIGHT = auto()
-        self.LEFT = auto()
-        self.UP = auto()
-        self.DOWN = auto()
+        self.X = "X"
+        self.A = "A"
+        self.B = "B"
+        self.Y = "Y"
+        self.L = "L"
+        self.R = "R"
+        self.SELECT = "SELECT"
+        self.START = "START"
+        self.RIGHT = "RIGHT"
+        self.LEFT = "LEFT"
+        self.UP = "UP"
+        self.DOWN = "DOWN"
 
         # fast access mapping from input to enum
         if keyboard:
@@ -130,12 +130,3 @@ class Controller:
         newButtons = buttons - self.buttonsPrev
         self.buttonsPrev = set(buttons)
         return inputs.union(newButtons)
-
-    def doWork(self, commands = None):
-        self.output = self.getInput()
-        if self.output:
-            for command in self.output:
-                commands[command]()
-            self.output.clear()
-        else:
-            commands["DEFAULT"]

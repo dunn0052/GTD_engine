@@ -28,97 +28,65 @@ class PC(newSprite):
         self.frameSpeed = frameSpeed
 
         super().__init__(self.IMAGE, self.FRAMES)
-        # get first player
-        # eventually set up a multi player mechanism
-        self.controller = level.controllers[0]
+        self.moveFlag = False
 
 
 
 
-    def get_keys(self):
-        self.vx, self.vy = 0, 0
-        keys = pg.key.get_pressed()
-        if keys[pg.K_LEFT] or keys[pg.K_a]:
-            self.changeDirection(1)
-            self.vx = -self.SPEED
-        if keys[pg.K_RIGHT] or keys[pg.K_d]:
-            self.changeDirection(2)
-            self.vx = self.SPEED
-        if keys[pg.K_UP] or keys[pg.K_w]:
-            self.changeDirection(3)
-            self.vy = -self.SPEED
-        if keys[pg.K_DOWN] or keys[pg.K_s]:
-            self.changeDirection(0)
-            self.vy = self.SPEED
-        if self.vx != 0 and self.vy != 0:
-            self.vx *= 0.7071
-            self.vy *= 0.7071
-        if self.vx == 0 and self.vy == 0:
-            self.changeImage(self.DIRECTION * self.CYCLE)
 
-    def getButtonsPressed(self):
-        self.buttons = self.controller.getInput()
 
-        # can make it modular by setting a command dict
-    def directionPadMove(self):
-        c = self.controller
-        moveFlag = False
-        self.vx, self.vy = 0, 0
-        if  c.DOWN in self.buttons:
-            #  First dir
-            self.changeDirection(0)
-            self.vy = self.SPEED
-            moveFlag = True
+    # can make it modular by setting a command dict
 
-        if c.LEFT in self.buttons:
-            self.changeDirection(1)
-            self.vx = -self.SPEED
-            moveFlag = True
+    def doDOWN(self):
+        #  First dir
+        self.changeDirection(0)
+        self.vy = self.SPEED
+        self.moveFlag = True
 
-        if c.RIGHT in self.buttons:
-            self.changeDirection(2)
-            self.vx = self.SPEED
-            moveFlag = True
+    def doLEFT(self):
+        self.changeDirection(1)
+        self.vx = -self.SPEED
+        self.moveFlag = True
 
-        if c.UP in self.buttons:
-            self.changeDirection(3)
-            self.vy = -self.SPEED
-            moveFlag = True
+    def doRIGHT(self):
+        self.changeDirection(2)
+        self.vx = self.SPEED
+        self.moveFlag = True
 
-        # diagnonals
-        if self.vx != 0 and self.vy != 0:
-            self.vx *= 0.7071
-            self.vy *= 0.7071
-        # default
-        if self.vx == 0 and self.vy == 0:
-            self.changeImage(self.DIRECTION * self.CYCLE)
+    def doUP(self):
+        self.changeDirection(3)
+        self.vy = -self.SPEED
+        self.moveFlag = True
 
-        if moveFlag:
-            self.movementUpdate()
 
-    def buttonCommands(self, commands = None):
-        c = self.controller
-        if c.L in self.buttons:
-            if self.SPEED > 0:
-                self.SPEED -= 50
-            print(self.SPEED)
-        if c.R in self.buttons:
-            if self.SPEED < 1500:
-                self.SPEED += 50
-            print(self.SPEED)
-        if c.A in self.buttons:
-            self.npcTrigger()
 
-        if c.B in self.buttons:
-            self.level.text.nextScreen()
-        if c.X in self.buttons:
-            print("X")
-        if c.Y in self.buttons:
-            print("Y")
-        if c.START in self.buttons:
-            print("START")
-        if c.SELECT in self.buttons:
-            print(self.rect.topleft)
+    def doL(self):
+        if self.SPEED > 0:
+            self.SPEED -= 50
+        print(self.SPEED)
+
+    def doR(self):
+        if self.SPEED < 1500:
+            self.SPEED += 50
+        print(self.SPEED)
+
+    def doA(self):
+        self.npcTrigger()
+
+    def doB(self):
+        print("B")
+
+    def doX(self):
+        print("X")
+
+    def doY(self):
+        print("Y")
+
+    def doSTART(self):
+        print("START")
+
+    def doSELECT(self):
+        print(self.rect.topleft)
 
 
 
@@ -174,13 +142,11 @@ class PC(newSprite):
         self.collide_with_walls('x')
         self.rect.y = self.y
         self.collide_with_walls('y')
+        self.vx, self.vy = 0,0
 
     def update(self):
-        self.getButtonsPressed()
-        self.directionPadMove()
-        self.buttonCommands()
-
-
+        if self.moveFlag:
+            self.movementUpdate()
 
 
     def changeDirection(self, direction):

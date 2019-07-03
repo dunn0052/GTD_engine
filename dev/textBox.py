@@ -2,18 +2,20 @@ import pygame as pg
 from newSprite import newSprite
 
 class Textbox(newSprite):
-    def __init__(self, text = "sample", offset = 20):
+    def __init__(self, text, backgroundImage, offset = 20, level = None):
         # set up background
+        self.level = level
         self.offset = offset
         pg.sprite.Sprite.__init__(self)
         self.next = True
         self.end = False
         # make background
-        self.image = pg.Surface((1920, 240))
-        self.image.fill((255,0,0))
+        super().__init__(backgroundImage)
         self.rect = self.image.get_rect()
         self.rect.x = 0
         self.rect.y = 0
+
+        self.originalImage = self.image.copy()
 
         # index of word blits
         self.originalX = self.rect.x + self.offset
@@ -42,7 +44,7 @@ class Textbox(newSprite):
             self.letterIndex = 0
             self.wordSurface = self.font.render(self.word, 0, pg.Color('black'))
             self.word_width, self.word_height = self.wordSurface.get_size()
-            if self.textX + self.word_width >= self.rect.width:
+            if self.textX + self.word_width >= self.rect.width - self.offset:
                 self.lineBreak()
 
         except StopIteration:
@@ -56,10 +58,11 @@ class Textbox(newSprite):
             # go to next line
             self.lineBreak()
             self.nextWord()
-            if self.textY + self.word_height >= self.rect.height:
+            if self.textY + self.word_height + self.offset >= self.rect.height:
                 self.next = False
         except StopIteration:
             self.end = True
+            self.next = False
 
 
     def blitWord(self):
@@ -71,6 +74,10 @@ class Textbox(newSprite):
             self.textX += self.word_width + self.space
             self.nextWord()
 
+    def blitAll(self):
+        while self.next:
+            self.blitWord()
+
     def lineBreak(self):
         self.textX = self.originalX
         self.textY += self.word_height
@@ -79,10 +86,17 @@ class Textbox(newSprite):
         self.next = True
         self.textX = self.originalX
         self.textY = self.originalY
-        self.image.fill((255,0,0))
+        self.image.blit(self.originalImage, (0,0))
 
     def nextScreen(self):
         if not self.next:
             self.clearScreen()
         if self.end:
+            self.level.setControllerContext(self.level.PC)
             self.kill()
+
+    def doA(self):
+        if not self.next:
+            self.nextScreen()
+        else:
+            self.blitAll()
