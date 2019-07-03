@@ -34,25 +34,25 @@ class MapMaker:
             command()
         return self.newLevel
 
-    def setBackground(self, backgroundImage):
+    def packBackground(self, backgroundImage):
         self.addRunningCommand(lambda: self.loadBackground(backgroundImage))
 
-    def setTileSheet(self, tileSheet, tileHeight, tileWidth):
+    def packTileSheet(self, tileSheet, tileHeight, tileWidth):
         self.addRunningCommand(lambda: self.loadTileSheet(tileSheet, tileHeight, tileWidth))
 
-    def setWallMap(self, path):
+    def packWallMap(self, path):
         self.addRunningCommand(lambda:self.loadWalls(path))
-    def setNpcMap(self, path):
+    def packNpcMap(self, path):
         self.addRunningCommand(lambda:self.loadNpcs(path))
-    def setTriggerMap(self, path):
+    def packTriggerMap(self, path):
         self.addRunningCommand(lambda:self.loadTriggers(path))
-    def setOverMap(self, path):
+    def packOverMap(self, path):
         self.addRunningCommand(lambda:self.loadOver(path))
-    def setWeatherMap(self, path):
+    def packWeatherMap(self, path):
         self.addRunningCommand(lambda:self.loadWeather(path))
 
-    def setPCMap(self, x, y, image, spd, direction, frames, cycle, frameSpeed):
-        self.addRunningCommand(lambda:self.setPC(PC(x = x, y = y, image = image, spd = spd, direction = direction, frames = frames, cycle = cycle, level = self.newLevel, frameSpeed = frameSpeed), x, y))
+    def packPCMap(self, x, y, image, spd, direction, frames, cycle, frameSpeed):
+        self.addRunningCommand(lambda:self.packPC(PC(x = x, y = y, image = image, spd = spd, direction = direction, frames = frames, cycle = cycle, level = self.newLevel, frameSpeed = frameSpeed), x, y))
 
 
 
@@ -71,7 +71,7 @@ class MapMaker:
         self.newLevel.all_sprites.add(self.newLevel.background)
 
 
-    def setPC(self, PC, x, y):
+    def packPC(self, PC, x, y):
         self.newLevel.setPC(PC, x, y)
 
 
@@ -88,7 +88,7 @@ class MapMaker:
             self.newLevel.WALL_LAYER.add(entity)
         elif entType == "PLAYER":
             entity = PC(x, y, image, spd, direction, frames, cycle, level = self, frameSpeed = frameSpeed)
-            self.newLevel.setPC(entity, x, y)
+            self.newLevel.packPC(entity, x, y)
         elif entType == "NPC":
             entity = NPC.Npc(image, x, y, frames, direction, cycle, spd, level = self)
             self.newLevel.all_sprites.add(entity)
@@ -171,7 +171,7 @@ class MapMaker:
         #self.newLevel.WEATHER_LAYER.add()
 
     def makeText(self, text):
-        self.newLevel.text = Textbox(text = text, backgroundImage = "images//textBackground.png", offset = 65, level = self.newLevel)
+        self.newLevel.text = Textbox(text = text, backgroundImage = "images//textBackground.png", offpack = 65, level = self.newLevel)
         self.newLevel.all_sprites.add(self.newLevel.text)
         self.newLevel.text_layer.add(self.newLevel.text)
         self.newLevel.setControllerContext(self.newLevel.text)
