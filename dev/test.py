@@ -1,6 +1,6 @@
 from SCREEN import SCREEN
 from BACKGROUND import Background
-from LEVEL import LEVEL
+from level import Level
 from controllerIO import Controller
 from WALL import Wall
 
@@ -9,9 +9,9 @@ ctr = Controller(0)
 # create the game object
 s = SCREEN()
 
-l = LEVEL(backgroundImage = "images//pkBg.png", layerNum = 7, controller = ctr, spriteSheetPath = "images//BWBG.png", tileHeight = 80, tileWidth = 80)
+l = Level(backgroundImage = "images//pkBg.png", layerNum = 7, controller = ctr, spriteSheetPath = "images//BWBG.png", tileHeight = 80, tileWidth = 80)
 l.makeEnt("PLAYER", "images//csBig.png", x = 200, y =350, spd = 500, frameSpeed = 50)
-l2 = LEVEL(backgroundImage = "images//house.png", layerNum = 7, controller = ctr, spriteSheetPath = "images//BWBG.png", tileHeight = 80, tileWidth = 80)
+l2 = Level(backgroundImage = "images//house.png", layerNum = 7, controller = ctr, spriteSheetPath = "images//BWBG.png", tileHeight = 80, tileWidth = 80)
 s.initLevel(l)
 l.addExit(l2)
 l2.addExit(l)
