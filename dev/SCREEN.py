@@ -24,6 +24,7 @@ class SCREEN:
 
     def initLevel(self, level):
         self.level = level
+        self.level.setController(self.controllers[0])
         self.camera.mapSize(self.level.background.originalHeight, self.level.background.originalWidth)
         if self.level.background.originalWidth < self.width or self.level.background.originalHeight < self.height:
             self.updateDisplay = self.updateDisplaySmall
@@ -49,7 +50,6 @@ class SCREEN:
 
     def setController(self, controller, commands = None):
         self.controllers.append(controller)
-        controller.setCommands(commands)
 
     def doCommands(self):
         self.level.doCommands(self.level.context)

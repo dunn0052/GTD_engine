@@ -61,10 +61,7 @@ class Controller:
         if keyboard:
             self.getInput = self.getKeys
 
-        self.commands = None
 
-    def setCommands(self, commands):
-        self.commands = commands
 
     # get controller input
     def getInput(self):
