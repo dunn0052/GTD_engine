@@ -1,3 +1,6 @@
+# this is an example of a level system being created
+# the creation functions are packed into a pickle file to be executed on load
+
 from levelMaker import MapMaker
 
 l = MapMaker(7, "palletTown")
@@ -7,7 +10,7 @@ l.packWallMap('maps//pkBg_Tile Layer 2.csv')
 l.packTriggerMap('maps//pkBg_Tile Layer 5.csv')
 l.packNpcMap('maps//pkBg_Tile Layer 4.csv')
 l.packOverMap('maps//pkBg_Tile Layer 3.csv')
-l.packPCMap(image = "images//csBig.png", x = 200, y =350, spd = 500, frameSpeed = 50, cycle = 3, direction = 0, frames = 12)
+l.packPCMap(image = "images//csBig.png", x = 10, y =7, spd = 500, frameSpeed = 50, cycle = 3, direction = 0, frames = 12)
 l.addRunningCommand(lambda:l.addNpcDialogue(0, "This is some example text.\nHere is a new line.\nHere is another\nYou can press A to continue to the next screeen\nOr you can press A to get all of the text instantly\nOkay I am done talking"))
 
 
@@ -20,9 +23,9 @@ l2.packTriggerMap("maps//house_Tile Layer 4.csv")
 
 l.addRunningCommand(lambda:l.addExit(l2.newLevel))
 l2.addRunningCommand(lambda:l2.addExit(l.newLevel))
-l.addRunningCommand(lambda:l.newLevel.TRIGGER_LAYER.get_sprite(0).setInteraction(lambda: s.nextLevel(0, 288, 720)))
-l2.addRunningCommand(lambda:l2.newLevel.TRIGGER_LAYER.get_sprite(1).setInteraction(lambda: s.nextLevel(0, 498, 560)))
-l2.addRunningCommand(lambda:l2.newLevel.TRIGGER_LAYER.get_sprite(2).setInteraction(lambda: s.nextLevel(0, 498, 560)))
+l.addRunningCommand(lambda:l.newLevel.TRIGGER_LAYER.get_sprite(0).setInteraction(lambda: s.nextLevel(0, 3, 8)))
+l2.addRunningCommand(lambda:l2.newLevel.TRIGGER_LAYER.get_sprite(1).setInteraction(lambda: s.nextLevel(0, 6, 7)))
+l2.addRunningCommand(lambda:l2.newLevel.TRIGGER_LAYER.get_sprite(2).setInteraction(lambda: s.nextLevel(0, 6, 7)))
 
 l.saveLevel()
 l2.saveLevel()

@@ -13,7 +13,4 @@ town = l.unpackLevel()
 firstfloor = l2.unpackLevel()
 s.initLevel(town)
 
-
-
-
 s.run()

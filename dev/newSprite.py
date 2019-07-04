@@ -1,7 +1,7 @@
 import pygame, math, sys, os
 
 class newSprite(pygame.sprite.Sprite):
-    def __init__(self, image, frames=1):
+    def __init__(self, image = None, frames=1):
       pygame.init()
       pygame.sprite.Sprite.__init__(self)
       self.images = []
@@ -23,7 +23,7 @@ class newSprite(pygame.sprite.Sprite):
       self.screenRefresh = False
       self.currentImage = 0
       self.rect = self.image.get_rect()
-      self.rect.topleft = (0, 0)
+      #self.rect.topleft = (0, 0)
       self.mask = pygame.mask.from_surface(self.image)
       self.angle = 0
       self.scale = 1

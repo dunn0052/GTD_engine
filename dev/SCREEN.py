@@ -1,6 +1,10 @@
 import pygame as pg
 from Camera import Camera
 import sys
+from controllerOff import controllerOFF
+
+# the screen object represents the screen/hardware of the game system
+# it draws the layers of each level and
 
 class SCREEN:
 
@@ -8,10 +12,11 @@ class SCREEN:
         pg.init()
         self.width = Width
         self.height = Height
-        self.screen = pg.display.set_mode((Width, Height))
+        self.screen = pg.display.set_mode()
         pg.display.set_caption(Title)
         self.clock = pg.time.Clock()
         self.controllers = []
+        self.off = controllerOFF()
         # camera size of screen
         self.camera = Camera(Width, Height)
 
@@ -37,16 +42,18 @@ class SCREEN:
         self.level.exit[index].setPC(self.level.PC, x, y)
         # remove from current sprite update
         self.level.all_sprites.remove(self.level.PC)
+        self.level.animated_sprites.remove(self.level.PC)
         self.initLevel(self.level.exit[index])
 
     def screenFade(self):
+        self.level.setControllerContext(self.off)
         fade = pg.Surface((self.width, self.height))
         fade.fill((0,0,0))
         for alpha in range(0, 100, 2):
             fade.set_alpha(alpha)
             self.screen.blit(fade, (0,0))
             pg.display.flip()
-            pg.time.delay(1)
+            pg.time.delay(10)
 
     def setController(self, controller, commands = None):
         self.controllers.append(controller)
@@ -93,6 +100,7 @@ class SCREEN:
                 self.drawScrollLayer(layer)
         self.level.static_sprites.draw(self.screen)
         self.level.text_layer.draw(self.screen)
+
 
         pg.display.flip()
         keys = pg.key.get_pressed()

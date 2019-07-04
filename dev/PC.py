@@ -7,8 +7,7 @@ class PC(newSprite):
         self.level = level
         # Change to pc layer
         self.vx, self.vy = 0, 0
-        self.x = x
-        self.y = y
+        self.x, self.y = x, y
         # CONSTANTS #
         self.SPEED = spd
         self.IMAGE = image
@@ -27,8 +26,14 @@ class PC(newSprite):
         # how long before next frame is called
         self.frameSpeed = frameSpeed
 
+
+        # initialize the sprite instance
         super().__init__(self.IMAGE, self.FRAMES)
         self.moveFlag = False
+        self.hitbox = pg.Rect(self.x, self.y + self.rect.height/2, self.rect.width, self.rect.height/2)
+
+
+
 
 
 
@@ -86,7 +91,8 @@ class PC(newSprite):
         print("START")
 
     def doSELECT(self):
-        print(self.rect.topleft)
+        coords = (self.rect.x//self.level.tileWidth, self.rect.y//self.level.tileHeight)
+        print(coords)
 
 
 
@@ -94,23 +100,25 @@ class PC(newSprite):
 
     def collide_with_walls(self, dir):
         if dir == 'x':
-            hits = pg.sprite.spritecollide(self, self.level.solid_sprites, False)
+            hits = self.collideHitbox(self.level.solid_sprites)
             if hits:
                 if self.vx > 0:
-                    self.x = hits[0].rect.left - self.rect.width
+                    self.x = hits.rect.left - self.rect.width
                 if self.vx < 0:
-                    self.x = hits[0].rect.right
+                    self.x = hits.rect.right
                 self.vx = 0
                 self.rect.x = self.x
+                self.hitbox.x = self.x
         if dir == 'y':
-            hits = pg.sprite.spritecollide(self, self.level.solid_sprites, False)
+            hits = self.collideHitbox(self.level.solid_sprites)
             if hits:
                 if self.vy > 0:
-                    self.y = hits[0].rect.top - self.rect.height
+                    self.y = hits.rect.top - self.rect.height
                 if self.vy < 0:
-                    self.y = hits[0].rect.bottom
+                    self.y = hits.rect.bottom - self.hitbox.height
                 self.vy = 0
                 self.rect.y = self.y
+                self.hitbox.y = self.y + self.hitbox.height
 
     def solidTouching(self, layer):
         for ent in layer:
@@ -139,14 +147,17 @@ class PC(newSprite):
         self.y += self.vy * self.level.dt
         self.levelTrigger()
         self.rect.x = self.x
+        self.hitbox.x = self.x
         self.collide_with_walls('x')
         self.rect.y = self.y
+        self.hitbox.y = self.y + self.hitbox.height
         self.collide_with_walls('y')
         self.vx, self.vy = 0,0
 
     def update(self):
         if self.moveFlag:
             self.movementUpdate()
+
 
 
     def changeDirection(self, direction):
@@ -158,6 +169,12 @@ class PC(newSprite):
         self.y = y
         self.rect.x = self.x
         self.rect.y = self.y
+        self.hitbox.x = self.x
+        self.hitbox.y = self.y + self.hitbox.height
+
+    def moveToTile(self, x, y):
+        self.moveTo(x * self.level.tileWidth, y * self.level.tileHeight)
+
 
     def animate(self):
         if self.subFrame < self.frameSpeed:
@@ -166,3 +183,10 @@ class PC(newSprite):
         else:
             self.FRAME = (self.FRAME+1)%self.CYCLE              # Loop on end
             self.subFrame = 0
+
+
+
+    def collideHitbox(self, group):
+        for sprite in group:
+            if sprite.rect.colliderect(self.hitbox):
+                return sprite

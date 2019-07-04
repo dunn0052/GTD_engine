@@ -10,7 +10,6 @@ import mele
 from textBox import Textbox
 import pygame as pg
 from controllerIO import Controller as ct
-from functools import partial
 from spritesheet import spritesheet
 import csv
 import os
@@ -112,6 +111,8 @@ class MapMaker:
     def loadTileSheet(self, spriteSheetPath, tileHeight, tileWidth):
         self.tileHeight = tileHeight
         self.tileWidth =  tileWidth
+        self.newLevel.tileHeight = tileHeight
+        self.newLevel.tileWidth = tileWidth
         self.sheet = spritesheet(spriteSheetPath, tileHeight, tileWidth)
         self.tiles = self.sheet.get_tiles()
     # Level has a map class to help design levels
@@ -165,6 +166,8 @@ class MapMaker:
                             ent = over.Over(x = col * self.tileHeight, y = row * self.tileWidth, image = self.tiles[int(tile)])
                             self.newLevel.OVER_LAYER.add(ent)
                             self.newLevel.all_sprites.add(ent)
+
+
 
     def loadWeather(self, filename):
         ent = None
