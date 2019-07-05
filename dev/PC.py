@@ -31,7 +31,7 @@ class PC(newSprite):
         super().__init__(self.IMAGE, self.FRAMES)
         self.moveFlag = False
         self.hitbox = pg.Rect(self.x, self.y + self.rect.height/2, self.rect.width, self.rect.height/2)
-
+        self.weapon = None
 
 
 
@@ -76,7 +76,11 @@ class PC(newSprite):
         print(self.SPEED)
 
     def doA(self):
-        self.npcTrigger()
+        if self.npcTrigger():
+            pass
+        else:
+            if self.weapon:
+                self.weapon.attack()
 
     def doB(self):
         print("B")
@@ -95,7 +99,8 @@ class PC(newSprite):
         print(coords)
 
 
-
+    def attatchWeapon(self, weapon):
+        self.weapon = weapon
 
 
     def collide_with_walls(self, dir):
@@ -135,7 +140,8 @@ class PC(newSprite):
             for npc in self.level.NPC_LAYER:
                 if self.anySideCollision(npc.interactionRect):
                     npc.interact()
-                    return
+                    return True
+            return False
 
     def anySideCollision(self, rectangle):
         # ugly but quick
