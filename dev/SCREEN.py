@@ -2,6 +2,7 @@ import pygame as pg
 from Camera import Camera
 import sys
 from controllerOff import controllerOFF
+from objectRW import loadObject
 
 # the screen object represents the screen/hardware of the game system
 # it draws the layers of each level and
@@ -27,8 +28,9 @@ class SCREEN:
         self.screenRefresh = False
         self.tooSmall = False
 
-    def initLevel(self, level):
-        self.level = level
+    def initLevel(self, levelPath):
+        self.levelBuffer = loadObject(levelPath)
+        self.level = self.levelBuffer.unpackLevel()
         self.level.setController(self.controllers[0])
         self.camera.mapSize(self.level.background.originalHeight, self.level.background.originalWidth)
         if self.level.background.originalWidth < self.width or self.level.background.originalHeight < self.height:
@@ -38,12 +40,13 @@ class SCREEN:
 
     def nextLevel(self, index, x, y):
         self.screenFade()
-        # add same PC to next level
-        self.level.exit[index].setPC(self.level.PC, x, y)
+        PC = self.level.PC
         # remove from current sprite update
-        self.level.all_sprites.remove(self.level.PC)
-        self.level.animated_sprites.remove(self.level.PC)
+        self.level.PC.kill()
+
         self.initLevel(self.level.exit[index])
+        # add same PC to next level
+        self.level.setPC(PC, x, y)
 
     def screenFade(self):
         self.level.setControllerContext(self.off)
@@ -84,6 +87,7 @@ class SCREEN:
         for layer in self.level.layers:
                 self.drawScrollLayer(layer)
         self.level.static_sprites.draw()
+        self.level.text_layer.draw()
 
         pg.display.flip()
         keys = pg.key.get_pressed()

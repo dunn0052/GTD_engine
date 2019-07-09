@@ -33,6 +33,11 @@ class PC(newSprite):
         self.hitbox = pg.Rect(self.x, self.y + self.rect.height/2, self.rect.width, self.rect.height/2)
         self.weapon = None
 
+        self.up = 3
+        self.down = 0
+        self.left = 1
+        self.right = 2
+
 
 
 
@@ -44,22 +49,22 @@ class PC(newSprite):
 
     def doDOWN(self):
         #  First dir
-        self.changeDirection(0)
+        self.changeDirection(self.down)
         self.vy = self.SPEED
         self.moveFlag = True
 
     def doLEFT(self):
-        self.changeDirection(1)
+        self.changeDirection(self.left)
         self.vx = -self.SPEED
         self.moveFlag = True
 
     def doRIGHT(self):
-        self.changeDirection(2)
+        self.changeDirection(self.right)
         self.vx = self.SPEED
         self.moveFlag = True
 
     def doUP(self):
-        self.changeDirection(3)
+        self.changeDirection(self.up)
         self.vy = -self.SPEED
         self.moveFlag = True
 
@@ -77,15 +82,24 @@ class PC(newSprite):
 
     def doA(self):
         if self.npcTrigger():
-            pass
+            if self.weapon:
+                self.weapon.kill()
         else:
             if self.weapon:
+                if not self.weapon.alive():
+                    self.level.all_sprites.add(self.weapon)
+                    self.level.animated_sprites.add(self.weapon)
+                    self.level.PC_LAYER.add(self.weapon)
+                self.weapon.update()
                 self.weapon.attack()
+
 
     def doB(self):
         print("B")
 
     def doX(self):
+        if self.weapon:
+            self.weapon.kill()
         print("X")
 
     def doY(self):
@@ -101,6 +115,8 @@ class PC(newSprite):
 
     def attatchWeapon(self, weapon):
         self.weapon = weapon
+        self.weapon.update()
+
 
 
     def collide_with_walls(self, dir):
@@ -131,13 +147,12 @@ class PC(newSprite):
                 return [ent]
 
     def levelTrigger(self):
-        for trigger in self.level.TRIGGER_LAYER:
-            if self.checkCollision(trigger, center = True):
-                trigger.interact()
-                return
+        trigger = self.collideHitbox(self.level.TRIGGER_LAYER)
+        if trigger:
+            trigger.interact()
 
     def npcTrigger(self):
-            for npc in self.level.NPC_LAYER:
+            for npc in self.level.npc_sprites:
                 if self.anySideCollision(npc.interactionRect):
                     npc.interact()
                     return True
@@ -158,6 +173,9 @@ class PC(newSprite):
         self.rect.y = self.y
         self.hitbox.y = self.y + self.hitbox.height
         self.collide_with_walls('y')
+        # reset to starting position
+        if not self.vx and not self.vy:
+            self.changeImage(self.DIRECTION * self.CYCLE)
         self.vx, self.vy = 0,0
 
     def update(self):

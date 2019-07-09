@@ -1,5 +1,5 @@
 import pygame, math, sys, os
-
+vec = pygame.math.Vector2
 class newSprite(pygame.sprite.Sprite):
     def __init__(self, image = None, frames=1):
       pygame.init()
@@ -23,7 +23,7 @@ class newSprite(pygame.sprite.Sprite):
       self.screenRefresh = False
       self.currentImage = 0
       self.rect = self.image.get_rect()
-      #self.rect.topleft = (0, 0)
+      self.rect.topleft = (0, 0)
       self.mask = pygame.mask.from_surface(self.image)
       self.angle = 0
       self.scale = 1
@@ -84,6 +84,11 @@ class newSprite(pygame.sprite.Sprite):
     def touching(self, other):
         collided = pygame.sprite.collide_mask(self , other)
         return collided
+
+    def groupTouching(self, group):
+        for sprite in group:
+            if self.touching(sprite):
+                return sprite
 
     def checkCollision(self, other, center = False):
         if center:

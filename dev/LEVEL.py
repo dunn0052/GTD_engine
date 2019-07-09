@@ -17,6 +17,8 @@ class Level:
         self.animated_sprites = pg.sprite.Group()
         self.static_sprites = pg.sprite.OrderedUpdates() # maybe layeredUpdates?
         self.text_layer = pg.sprite.GroupSingle()
+        self.npc_sprites = pg.sprite.Group()
+        self.enemy_sprites = pg.sprite.Group()
         # draw layers
         self.layers = []
         for i in range(layerNum):
@@ -26,7 +28,6 @@ class Level:
             self.WALL_LAYER = self.layers[1] # level walls
             self.NPC_LAYER = self.layers[2] # draw NPC next
             self.TRIGGER_LAYER = self.layers[3]
-            self.layers[4] = pg.sprite.GroupSingle()
             self.PC_LAYER = self.layers[4]
             self.OVER_LAYER = self.layers[5] # things overhead - bridges/roof
             self.WEATHER_LAYER = self.layers[6] # small alpha effects -- rain, clouds, etc.
@@ -58,3 +59,6 @@ class Level:
         self.animated_sprites.add(self.PC)
         self.PC.moveToTile(x, y)
         self.setControllerContext(self.PC)
+        if self.PC.weapon:
+            self.PC.weapon.kill()
+            self.PC.weapon.level = self.PC.level

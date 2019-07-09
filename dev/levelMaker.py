@@ -6,13 +6,14 @@ import WALL
 import NPC
 import TRIGGER
 import over
-import mele
 from textBox import Textbox
 import pygame as pg
 from controllerIO import Controller as ct
 from spritesheet import spritesheet
 import csv
 import os
+from weapon import Weapon
+from enemy import Enemy
 
 class MapMaker:
 
@@ -55,7 +56,6 @@ class MapMaker:
 
 
 
-
     def saveLevel(self):
         path = "levels//" + self.newLevel.name + ".pkl"
         objectRW.saveObject(self, path)
@@ -72,6 +72,9 @@ class MapMaker:
 
     def packPC(self, PC, x, y):
         self.newLevel.setPC(PC, x, y)
+
+    def packEnemy(self, ene):
+        self.addRunningCommand(lambda: self.addEnemy(ene))
 
 
     def addExit(self,level):
@@ -157,6 +160,16 @@ class MapMaker:
                             self.newLevel.NPC_LAYER.add(ent)
                             self.newLevel.all_sprites.add(ent)
                             self.newLevel.solid_sprites.add(ent)
+                            self.newLevel.npc_sprites.add(ent)
+
+    def addEnemy(self, enemy):
+        ene = enemy()
+        self.newLevel.enemy_sprites.add(ene)
+        self.newLevel.solid_sprites.add(ene)
+        self.newLevel.NPC_LAYER.add(ene)
+        self.newLevel.all_sprites.add(ene)
+        self.newLevel.animated_sprites.add(ene)
+        ene.move(ene.x, ene.y)
 
     def loadOver(self, filename):
         data = self.loadData(filename)
@@ -174,7 +187,7 @@ class MapMaker:
         #self.newLevel.WEATHER_LAYER.add()
 
     def makeText(self, text):
-        self.newLevel.text = Textbox(text = text, backgroundImage = "images//textBackground.png", offpack = 65, level = self.newLevel)
+        self.newLevel.text = Textbox(text = text, backgroundImage = "images//textBackground.png", offset = 65, level = self.newLevel)
         self.newLevel.all_sprites.add(self.newLevel.text)
         self.newLevel.text_layer.add(self.newLevel.text)
         self.newLevel.setControllerContext(self.newLevel.text)
