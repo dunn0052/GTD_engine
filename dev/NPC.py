@@ -3,7 +3,7 @@ import pygame as pg
 from textBox import Textbox
 
 class Npc(newSprite):
-    def __init__(self, x, y, image, interaction = None, level = None, frames = 1, interactionBuffer = 20, frameSpeed = 100):
+    def __init__(self, x, y, image, interaction = None, level = None, frames = 1, cycle = 3, spd = 100, interactionBuffer = 20, frameSpeed = 100):
         # bad idea to have a level reference
         self.groups = None
         self.level = level
@@ -26,6 +26,10 @@ class Npc(newSprite):
 
         # interaction rect
         self.interactionRect = pg.Rect((self.x - self.buffer, self.y - self.buffer), (self.originalWidth + self.buffer * 2, self.originalHeight + self.buffer * 2))
+
+        # preset text
+        self.text = None
+        
         if self.frames == 1:
             self.animate = self.noAnimate
 
@@ -34,9 +38,14 @@ class Npc(newSprite):
 
     def interact(self):
         self.interaction()
+        if self.text:
+            self.level.displayText(self.text)
 
     def setInteraction(self, interaction):
         self.interaction = interaction
+
+    def setText(self, text):
+        self.text = text
 
     def animate(self):
         if self.subFrame < self.frameSpeed:
@@ -44,3 +53,15 @@ class Npc(newSprite):
         else:
             self.nextSpriteImage()
             self.subFrame = 0
+
+
+    def moveTo(self, x, y):
+        self.x = x
+        self.y = y
+        self.rect.x = self.x
+        self.rect.y = self.y
+        self.interactionRect = pg.Rect((self.x - self.buffer, self.y - self.buffer), (self.originalWidth + self.buffer * 2, self.originalHeight + self.buffer * 2))
+
+
+    def moveToTile(self, x, y):
+        self.moveTo(x * self.level.tileWidth, y * self.level.tileHeight)

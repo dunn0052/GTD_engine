@@ -82,7 +82,7 @@ class MapMaker:
 
 
     # factory for game objects
-    def makeEnt(self, entType, image = None, x = 0, y = 0, frames = 12, direction = 1, cycle = 3, spd = 200, interaction = None, frameSpeed = 100):
+    def makeEnt(self, entType, image = None, x = 0, y = 0, frames = 12, direction = 1, cycle = 3, spd = 200, interaction = None, interactionBuffer = 20, frameSpeed = 100):
         entType = entType.upper()
         if entType == "WALL":
             entity = WALL.Wall(x, y, image)
@@ -92,11 +92,16 @@ class MapMaker:
             entity = PC(x, y, image, spd, direction, frames, cycle, level = self, frameSpeed = frameSpeed)
             self.newLevel.packPC(entity, x, y)
         elif entType == "NPC":
-            entity = NPC.Npc(image, x, y, frames, direction, cycle, spd, level = self)
+            entity = NPC.Npc(x = x, y = y , image = image, frames = frames , cycle = cycle, spd = spd, level = self.newLevel)
             self.newLevel.all_sprites.add(entity)
             self.newLevel.NPC_LAYER.add(entity)
+            self.newLevel.solid_sprites.add(entity)
+            self.newLevel.npc_sprites.add(entity)
+            entity.moveToTile(entity.x, entity.y)
+            if interaction:
+                entity.setInteraction(interaction)
         elif entType == "TRIGGER":
-            entity = TRIGGER.Trigger(x, y, 64,64, interact = interaction, transparent = True, level = self)
+            entity = TRIGGER.Trigger(x, y, 64,64, interact = interaction, transparent = True, level = self.newLevel)
             self.newLevel.all_sprites.add(entity)
             self.newLevel.TRIGGER_LAYER.add(entity)
         elif entType == "ANIMATION":
@@ -192,6 +197,12 @@ class MapMaker:
         self.newLevel.text_layer.add(self.newLevel.text)
         self.newLevel.setControllerContext(self.newLevel.text)
 
-    def addNpcDialogue(self, NPCnum, text):
+    def addNpcDialogue(self, NPCNum, text):
         # get NPC and add dialogue function
-        self.newLevel.NPC_LAYER.get_sprite(NPCnum).setInteraction(lambda:self.makeText(text))
+        self.addRunningCommand(lambda: self.newLevel.NPC_LAYER.get_sprite(NPCNum).setInteraction(lambda:self.makeText(text)))
+
+    def addLevelTransition(self, levelpath, triggerNumber, x, y):
+        pass
+
+    def setTrigger(self, triggerNum, function):
+        self.addRunningCommand(lambda: self.newLevel.TRIGGER_LAYER.get_sprite(triggerNum).setInteraction(function))

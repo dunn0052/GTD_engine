@@ -43,8 +43,12 @@ class SCREEN:
         PC = self.level.PC
         # remove from current sprite update
         self.level.PC.kill()
-
-        self.initLevel(self.level.exit[index])
+        # if an index
+        if type(index) == type(1):
+            self.initLevel(self.level.exit[index])
+        # or if a path
+        elif type(index) == type("a"):
+            self.initLevel(index)
         # add same PC to next level
         self.level.setPC(PC, x, y)
 
@@ -86,8 +90,8 @@ class SCREEN:
         # explore dirty sprites
         for layer in self.level.layers:
                 self.drawScrollLayer(layer)
-        self.level.static_sprites.draw()
-        self.level.text_layer.draw()
+        self.level.static_sprites.draw(self.screen)
+        self.level.text_layer.draw(self.screen)
 
         pg.display.flip()
         keys = pg.key.get_pressed()

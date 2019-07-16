@@ -1,5 +1,5 @@
 import pygame as pg
-
+from textBox import Textbox
 # the level class holds the layers of sprites to draw
 # it also executes commands of the current controller context
 
@@ -62,3 +62,9 @@ class Level:
         if self.PC.weapon:
             self.PC.weapon.kill()
             self.PC.weapon.level = self.PC.level
+
+    def displayText(self, text):
+        self.text = Textbox(text = text, backgroundImage = "images//textBackground.png", offset = 65, level = self)
+        self.all_sprites.add(self.text)
+        self.text_layer.add(self.text)
+        self.setControllerContext(self.text)

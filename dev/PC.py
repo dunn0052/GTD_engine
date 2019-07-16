@@ -28,7 +28,8 @@ class PC(newSprite):
 
 
         # initialize the sprite instance
-        super().__init__(self.IMAGE, self.FRAMES)
+        if self.IMAGE:
+            super().__init__(self.IMAGE, self.FRAMES)
         self.moveFlag = False
         self.hitbox = pg.Rect(self.x, self.y + self.rect.height/2, self.rect.width, self.rect.height/2)
         self.weapon = None
