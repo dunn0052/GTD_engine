@@ -12,24 +12,21 @@ class Npc(newSprite):
         self.frameSpeed = frameSpeed
         # size of interaction buffer rect beyond image rect
         self.buffer = interactionBuffer
-        super().__init__(self.image, self.frames)
+        self.rect = None
+        self.interactionRect = None
 
 
-        self.rect = self.image.get_rect()
         self.x = x
         self.y = y
-        self.rect.x = x
-        self.rect.y = y
+
 
 
         self.interaction = lambda:print(self.rect)
 
         # interaction rect
-        self.interactionRect = pg.Rect((self.x - self.buffer, self.y - self.buffer), (self.originalWidth + self.buffer * 2, self.originalHeight + self.buffer * 2))
-
         # preset text
         self.text = None
-        
+
         if self.frames == 1:
             self.animate = self.noAnimate
 
@@ -65,3 +62,10 @@ class Npc(newSprite):
 
     def moveToTile(self, x, y):
         self.moveTo(x * self.level.tileWidth, y * self.level.tileHeight)
+
+    def unpackSprite(self):
+        super().__init__(self.image, self.frames)
+        self.interactionRect = pg.Rect((self.x - self.buffer, self.y - self.buffer), (self.originalWidth + self.buffer * 2, self.originalHeight + self.buffer * 2))
+        self.rect = self.image.get_rect()
+        self.rect.x = self.x
+        self.rect.y = self.y

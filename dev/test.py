@@ -12,10 +12,12 @@ ctr = Controller(0)
 s = SCREEN()
 s.setController(ctr)
 s.initLevel("levels//dome.pkl")
-s.level.setPC(PC(image = "images//mog.png", x = 10, y =7, spd = 300, frameSpeed = 50, cycle = 3, direction = 0, frames = 12), x = 10 , y = 7 )
+mog = objectRW.loadObject("chars//mog.pkl")
+mog.unpackSprite()
+s.level.setPC(mog, x = 10 , y = 7 )
 
-watergun = Missile(x = 0, y = 0, image = "images//waterGunOne.png", frames = 1, level = s.level, char = s.level.PC, damage = 1, frameSpeed = 30)
-
+watergun = objectRW.loadObject("weapons//watergun.pkl")
+watergun.unpackSprite()
 s.level.PC.attatchWeapon(watergun)
 
 s.run()

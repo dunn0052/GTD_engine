@@ -2,26 +2,22 @@ from newSprite import newSprite
 import pygame as pg
 
 class Weapon(newSprite):
-    def __init__(self, x, y, image, level = None, speed = 0, frames = 1, damage = 0, frameSpeed = 0, char = None):
-        # bad idea to have a level reference
-        self.groups = None
-        self.level = level
+    def __init__(self, x, y, image, speed = 0, frames = 1, damage = 0, frameSpeed = 0):
         self.image = image
         self.frames = frames
         self.frameSpeed = frameSpeed
-        super().__init__(self.image, self.frames)
-
-        self.rect = self.image.get_rect()
+        self.rect = None
         self.x = x
         self.y = y
-        self.rect.x = x
-        self.rect.y = y
+
         self.damage = damage
         self.speed = speed
-        self.char = char
         self.currentFrame = 0
         self.attacking = False
         self.direction = 0
+
+    def setChar(self, char):
+        self.char = char
 
     def update(self):
         # move with PC and change direction when called
@@ -44,3 +40,13 @@ class Weapon(newSprite):
 
     def animate(self):
         pass
+
+    def unpackSprite(self):
+        super().__init__(self.image, self.frames)
+
+        self.rect = self.image.get_rect()
+        self.rect.x = self.x
+        self.rect.y = self.y
+
+    def setLevel(self, level):
+        self.level = level

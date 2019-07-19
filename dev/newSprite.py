@@ -158,3 +158,7 @@ class newSprite(pygame.sprite.Sprite):
 
     def animate(self):
         pass
+
+# unpack from pkling
+    def unpackSprite(self):
+        pass

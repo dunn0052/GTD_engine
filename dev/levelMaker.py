@@ -22,6 +22,7 @@ class MapMaker:
         # default name should change to not overwrite another default
         self.newLevel = Level(layers, name)
         self.runningCommands = []
+        self.packedSprites = []
 
 
 # functions needed when running
@@ -30,8 +31,12 @@ class MapMaker:
 # functions a level doesn't need while running
 
     def unpackLevel(self):
+        # do commands
         for command in self.runningCommands:
             command()
+        for sprite in self.packedSprites:
+            self.unpackSprite(sprite)
+
         return self.newLevel
 
     def packBackground(self, backgroundImage):
@@ -76,6 +81,27 @@ class MapMaker:
     def packEnemy(self, ene):
         self.addRunningCommand(lambda: self.addEnemy(ene))
 
+    def unpackSprite(self, entity):
+        if type(entity) == newSprite:
+            sprite.unpackSprite()
+            if type(entity) == Npc:
+                self.newLevel.all_sprites.add(entity)
+                self.newLevel.NPC_LAYER.add(entity)
+                self.newLevel.solid_sprites.add(entity)
+                self.newLevel.npc_sprites.add(entity)
+                entity.moveToTile(entity.x, entity.y)
+            if type(entity) == Enemy:
+                self.newLevel.enemy_sprites.add(entity)
+                self.newLevel.solid_sprites.add(entity)
+                self.newLevel.NPC_LAYER.add(entity)
+                self.newLevel.all_sprites.add(entity)
+                self.newLevel.animated_sprites.add(entity)
+                entity.move(entity.x, entity.y)
+        else:
+            print("Could not unpack", entity)
+
+    def packSprite(self, sprite):
+        self.packedSprites.append(sprite)
 
     def addExit(self,level):
         self.newLevel.exit.append(level)
@@ -93,6 +119,7 @@ class MapMaker:
             self.newLevel.packPC(entity, x, y)
         elif entType == "NPC":
             entity = NPC.Npc(x = x, y = y , image = image, frames = frames , cycle = cycle, spd = spd, level = self.newLevel)
+            entity.unpackSprite()
             self.newLevel.all_sprites.add(entity)
             self.newLevel.NPC_LAYER.add(entity)
             self.newLevel.solid_sprites.add(entity)
@@ -162,6 +189,7 @@ class MapMaker:
                     for col, tile in enumerate(tiles):
                         if int(tile) > -1:
                             ent = NPC.Npc(x = col * self.tileHeight, y = row * self.tileWidth, image = self.tiles[int(tile)], level = self)
+                            ent.unpackSprite()
                             self.newLevel.NPC_LAYER.add(ent)
                             self.newLevel.all_sprites.add(ent)
                             self.newLevel.solid_sprites.add(ent)
@@ -169,6 +197,7 @@ class MapMaker:
 
     def addEnemy(self, enemy):
         ene = enemy()
+        ene.unpackSprite()
         self.newLevel.enemy_sprites.add(ene)
         self.newLevel.solid_sprites.add(ene)
         self.newLevel.NPC_LAYER.add(ene)

@@ -7,19 +7,15 @@ class Enemy(newSprite):
         self.frames = frames
         self.frameSpeed = frameSpeed
         self.level = level
-        super().__init__(self.image, self.frames)
-
-
-        self.rect = self.image.get_rect()
+        self.rect = None
         self.x = x
         self.y = y
-        self.rect.x = x
-        self.rect.y = y
+
         self.DIRECTION = direction
         self.CYCLE = cycle
         self.FRAME = 0
         self.moveFlag = False
-        self.changeDirection(self.DIRECTION)
+
 
 
     def changeDirection(self, direction):
@@ -102,3 +98,10 @@ class Enemy(newSprite):
         else:
             self.FRAME = (self.FRAME+1)%self.CYCLE              # Loop on end
             self.subFrame = 0
+
+    def unpackSprite(self):
+        super().__init__(self.image, self.frames)
+        self.rect = self.image.get_rect()
+        self.rect.x = x
+        self.rect.y = y
+        self.changeDirection(self.DIRECTION)

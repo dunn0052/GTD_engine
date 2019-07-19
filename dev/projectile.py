@@ -2,10 +2,9 @@ from newSprite import newSprite
 import pygame as pg
 class Projectile(newSprite):
 
-    def __init__(self, x, y, image, speed = 0, direction = 0, time = 1000, frames = 1, damage = 0, frameSpeed = 0, missile = None, level = None):
+    def __init__(self, x, y, image, speed = 0, time = 1000, frames = 1, damage = 0, frameSpeed = 0, missile = None):
         super().__init__(image, frames)
         self.missile = missile
-        self.level = level
         self.frames = frames
         self.frame = 0
         self.frameSpeed = frameSpeed
@@ -22,11 +21,10 @@ class Projectile(newSprite):
         self.right = 2
 
         self.rect.center = [x,y]
+
+    def setDirection(self, direction):
+
         self.direction = direction
-        self.level = level
-        self.level.all_sprites.add(self)
-        self.level.animated_sprites.add(self)
-        self.level.PC_LAYER.add(self)
 
         if direction == self.up:
             self.speedy -= self.speed
@@ -48,12 +46,12 @@ class Projectile(newSprite):
 
         if not self.collided:
             self.transformSprite(angle = self.transform, scale = 1)
-            hit = self.groupTouching(self.level.solid_sprites)
+            hit = self.groupTouching(self.missile.level.solid_sprites)
             if not hit:
-                self.rect.centerx += self.speedx * self.level.dt
-                self.rect.centery += self.speedy * self.level.dt
+                self.rect.centerx += self.speedx * self.missile.level.dt
+                self.rect.centery += self.speedy * self.missile.level.dt
             else:
-                if self.level.enemy_sprites.has(hit):
+                if self.missile.level.enemy_sprites.has(hit):
                     hit.hit(self.damage)
                 self.collided = True
 

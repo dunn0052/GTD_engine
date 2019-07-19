@@ -12,7 +12,7 @@ l.packTriggerMap('maps//pkBg_Tile Layer 5.csv')
 l.packNpcMap('maps//pkBg_Tile Layer 4.csv')
 l.packOverMap('maps//pkBg_Tile Layer 3.csv')
 l.addNpcDialogue(0, "This is some example text.\nHere is a new line.\nHere is another\nYou can press A to continue to the next screeen\nOr you can press A to get all of the text instantly\nOkay I am done talking")
-ene = lambda: Enemy(x = 300, y = 300, image = "images//csBig.png", frames = 12, cycle = 3, spd = 100, direction = 0, frameSpeed = 10, health = 10, level = s.levelBuffer)
+ene = Enemy(x = 300, y = 300, image = "images//csBig.png", frames = 12, cycle = 3, spd = 100, direction = 0, frameSpeed = 10, health = 10, level = l.newLevel)
 l.packEnemy(ene)
 
 

@@ -27,11 +27,9 @@ class PC(newSprite):
         self.frameSpeed = frameSpeed
 
 
-        # initialize the sprite instance
-        if self.IMAGE:
-            super().__init__(self.IMAGE, self.FRAMES)
+
+        self.rect = None
         self.moveFlag = False
-        self.hitbox = pg.Rect(self.x, self.y + self.rect.height/2, self.rect.width, self.rect.height/2)
         self.weapon = None
 
         self.up = 3
@@ -116,6 +114,8 @@ class PC(newSprite):
 
     def attatchWeapon(self, weapon):
         self.weapon = weapon
+        weapon.setLevel(self.level)
+        weapon.setChar(self)
         self.weapon.update()
 
 
@@ -215,3 +215,9 @@ class PC(newSprite):
         for sprite in group:
             if sprite.rect.colliderect(self.hitbox):
                 return sprite
+
+    def unpackSprite(self):
+        # initialize the sprite instance
+        if self.IMAGE:
+            super().__init__(self.IMAGE, self.FRAMES)
+        self.hitbox = pg.Rect(self.x, self.y + self.rect.height/2, self.rect.width, self.rect.height/2)
