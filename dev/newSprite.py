@@ -65,6 +65,12 @@ class newSprite(pygame.sprite.Sprite):
       else:
           self.rect.topleft = [xpos, ypos]
 
+    def moveTo(self, x, y):
+        self.x = x
+        self.y = y
+        self.rect.x = self.x
+        self.rect.y = self.y
+
     def changeImage(self, index):
       self.currentImage = index
       if self.angle == 0 and self.scale == 1:
@@ -162,3 +168,6 @@ class newSprite(pygame.sprite.Sprite):
 # unpack from pkling
     def unpackSprite(self):
         pass
+
+    def setLevel(self, level):
+        self.level = level

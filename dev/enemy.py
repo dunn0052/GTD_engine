@@ -1,7 +1,7 @@
 from newSprite import newSprite
-
+import pygame
 class Enemy(newSprite):
-    def __init__(self, x, y, image, frames, cycle, spd, direction, frameSpeed, health, level):
+    def __init__(self, x, y, image, frames, cycle, spd, direction, frameSpeed, health, level = None):
         self.health = health
         self.image = image
         self.frames = frames
@@ -10,6 +10,9 @@ class Enemy(newSprite):
         self.rect = None
         self.x = x
         self.y = y
+        self.SPEED = spd
+        self.vx = self.SPEED
+        self.vy = self.SPEED
 
         self.DIRECTION = direction
         self.CYCLE = cycle
@@ -46,7 +49,7 @@ class Enemy(newSprite):
 
     def collide_with_walls(self, dir):
         if dir == 'x':
-            hits = pygame.sprite.spritecollide(self, self.level.solid_sprites)
+            hits = pygame.sprite.spritecollide(self, self.level.solid_sprites, False)
             if hits:
                 if self.vx > 0:
                     self.x = hits[0].rect.left - self.rect.width
@@ -55,7 +58,7 @@ class Enemy(newSprite):
                 self.vx = 0
                 self.rect.x = self.x
         if dir == 'y':
-            hits = pygame.sprite.spritecollide(self, self.level.solid_sprites)
+            hits = pygame.sprite.spritecollide(self, self.level.solid_sprites, False)
             if hits:
                 if self.vy > 0:
                     self.y = hits[0].rect.top - self.rect.height
@@ -74,13 +77,22 @@ class Enemy(newSprite):
         self.collide_with_walls('y')
         self.vx, self.vy = 0,0
 
+
+
+    def moveToTile(self, x, y):
+        self.moveTo(x * self.level.tileWidth, y * self.level.tileHeight)
+
     def update(self):
+        self.AI()
         if self.moveFlag:
             self.movementUpdate()
 
     def aStar(self):
         # do a* algorithm for path to PC
         pass
+
+    def AI(self):
+        self.doDOWN()
 
 
     def hit(self, damage):
@@ -102,6 +114,4 @@ class Enemy(newSprite):
     def unpackSprite(self):
         super().__init__(self.image, self.frames)
         self.rect = self.image.get_rect()
-        self.rect.x = x
-        self.rect.y = y
         self.changeDirection(self.DIRECTION)

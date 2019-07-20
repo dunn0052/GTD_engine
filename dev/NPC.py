@@ -36,13 +36,19 @@ class Npc(newSprite):
     def interact(self):
         self.interaction()
         if self.text:
-            self.level.displayText(self.text)
+            self.level.displayText(self.text[self.currentText])
+            self.currentText = (self.currentText + 1)%len(self.text)
+
 
     def setInteraction(self, interaction):
         self.interaction = interaction
 
     def setText(self, text):
         self.text = text
+        self.currentText = 0
+        if not type(self.text) == list:
+            self.text = [self.text]
+
 
     def animate(self):
         if self.subFrame < self.frameSpeed:

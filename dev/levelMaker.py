@@ -4,6 +4,7 @@ from PC import PC
 from BACKGROUND import Background
 import WALL
 import NPC
+from NPC import Npc
 import TRIGGER
 import over
 from textBox import Textbox
@@ -14,6 +15,8 @@ import csv
 import os
 from weapon import Weapon
 from enemy import Enemy
+from treasure import Treasure
+from newSprite import newSprite
 
 class MapMaker:
 
@@ -82,21 +85,17 @@ class MapMaker:
         self.addRunningCommand(lambda: self.addEnemy(ene))
 
     def unpackSprite(self, entity):
-        if type(entity) == newSprite:
-            sprite.unpackSprite()
-            if type(entity) == Npc:
-                self.newLevel.all_sprites.add(entity)
-                self.newLevel.NPC_LAYER.add(entity)
-                self.newLevel.solid_sprites.add(entity)
+        if isinstance(entity, newSprite):
+            entity.setLevel(self.newLevel)
+            entity.unpackSprite()
+            self.newLevel.all_sprites.add(entity)
+            self.newLevel.NPC_LAYER.add(entity)
+            self.newLevel.solid_sprites.add(entity)
+            entity.moveToTile(entity.x, entity.y)
+            if isinstance(entity, Npc):
                 self.newLevel.npc_sprites.add(entity)
-                entity.moveToTile(entity.x, entity.y)
             if type(entity) == Enemy:
                 self.newLevel.enemy_sprites.add(entity)
-                self.newLevel.solid_sprites.add(entity)
-                self.newLevel.NPC_LAYER.add(entity)
-                self.newLevel.all_sprites.add(entity)
-                self.newLevel.animated_sprites.add(entity)
-                entity.move(entity.x, entity.y)
         else:
             print("Could not unpack", entity)
 
