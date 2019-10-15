@@ -36,15 +36,6 @@ class Controller:
         self.UP = "UP"
         self.DOWN = "DOWN"
 
-        # fast access mapping from input to enum
-        if keyboard:
-            self.buttonMap = {k["x"]:self.X, k["a"]:self.A, k["b"]:self.B, k["y"]:self.Y, k["q"]:self.L, k["e"]:self.R, k["h"]:self.START, k["g"]:self.SELECT}
-        else:
-            self.buttonMap = {0:self.X, 1:self.A, 2:self.B, 3:self.Y, 4:self.L, 5:self.R, 8:self.SELECT, 9:self.START}
-
-        self.buttonsPrev = set()
-
-
         # access joystick number
         try:
             #init joystick
@@ -56,8 +47,17 @@ class Controller:
             print("No controller detected!")
             keyboard = True
 
+        # fast access mapping from input to enum
+        if keyboard:
+            self.buttonMap = {k["x"]:self.X, k["a"]:self.A, k["b"]:self.B, k["y"]:self.Y, k["q"]:self.L, k["e"]:self.R, k["h"]:self.START, k["g"]:self.SELECT}
+        else:
+            self.buttonMap = {0:self.X, 1:self.A, 2:self.B, 3:self.Y, 4:self.L, 5:self.R, 8:self.SELECT, 9:self.START}
+
+        self.buttonsPrev = set()
+
         self.output = set()
 
+        # trick controller input to get keys instead
         if keyboard:
             self.getInput = self.getKeys
 
