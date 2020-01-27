@@ -5,7 +5,7 @@ from textBox import Textbox
 
 
 class Level:
-    def __init__(self, layerNum = 7, name = "NoName"):
+    def __init__(self, layerNum = 8, name = "NoName"):
         # controller access
         self.controllers = []
         self.tileHeight, self.tileWidth = 0,0
@@ -19,6 +19,7 @@ class Level:
         self.text_layer = pg.sprite.GroupSingle()
         self.npc_sprites = pg.sprite.Group()
         self.enemy_sprites = pg.sprite.Group()
+        self.lighting = None
         # draw layers
         self.layers = []
         for i in range(layerNum):
@@ -30,9 +31,9 @@ class Level:
             self.TRIGGER_LAYER = self.layers[3]
             self.PC_LAYER = self.layers[4]
             self.OVER_LAYER = self.layers[5] # things overhead - bridges/roof
-            self.WEATHER_LAYER = self.layers[6] # small alpha effects -- rain, clouds, etc.
+            ##self.WEATHER_LAYER = self.layers[6] # small alpha effects -- rain, clouds, etc.
         except:
-            print("Number of layers must be greater than 7")
+            print("Number of layers must be greater than 8")
 
         self.exit = []
         self.dt = 0

@@ -7,3 +7,7 @@ class Lighting:
         self.darkness = pg.Surface((self.x, self.y))
         self.darkness.fill(color)
         self.darkness.set_alpha(alpha)
+
+    def draw(screen):
+        screen.blit(self.darkness)
+

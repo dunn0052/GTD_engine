@@ -73,9 +73,9 @@ class SCREEN:
         self.playing = True
         while self.playing:
             self.level.dt = self.clock.tick(self.FPS) / 1000
-            self.doCommands()
-            self.update()
-            self.updateDisplay()
+            self.doCommands() # gather button presses
+            self.update() # update positions
+            self.updateDisplay() # clear and redraw
 
 
     def update(self):
@@ -90,9 +90,9 @@ class SCREEN:
         # explore dirty sprites
         for layer in self.level.layers:
                 self.drawScrollLayer(layer)
+        #self.level.weather.draw(self.screen)
         self.level.static_sprites.draw(self.screen)
         self.level.text_layer.draw(self.screen)
-
         pg.display.flip()
         keys = pg.key.get_pressed()
         if (keys[pg.K_ESCAPE]):

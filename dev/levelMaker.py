@@ -14,6 +14,7 @@ import csv
 import os
 from weapon import Weapon
 from enemy import Enemy
+from lighting import Lighting
 
 class MapMaker:
 
@@ -50,6 +51,8 @@ class MapMaker:
         self.addRunningCommand(lambda:self.loadOver(path))
     def packWeatherMap(self, path):
         self.addRunningCommand(lambda:self.loadWeather(path))
+    def packLighting(self, alpha):
+        self.addRunningCommand(lambda:self.setLighting(alpha))
 
     def packPCMap(self, x, y, image, spd, direction, frames, cycle, frameSpeed):
         self.addRunningCommand(lambda:self.packPC(PC(x = x, y = y, image = image, spd = spd, direction = direction, frames = frames, cycle = cycle, level = self.newLevel, frameSpeed = frameSpeed), x, y))
@@ -206,3 +209,7 @@ class MapMaker:
 
     def setTrigger(self, triggerNum, function):
         self.addRunningCommand(lambda: self.newLevel.TRIGGER_LAYER.get_sprite(triggerNum).setInteraction(function))
+
+
+##    def setLighting(self, alpha = 0):
+##        self.addRunningCommand(lambda: self.newLevel.lighting = Lighting(0,0,(0,0,0), alpha))

@@ -16,10 +16,24 @@ POS = 0.9
 NEG = -1.0
 NUM_BUTTONS = 10
 number = 0
-# testing
+NUM_AXIS = 2
 
+
+# mode types
+# SINGLE does not repeat while button held down
+# HOLD repeats entry while button is held down
+class Modes(Enum):
+    SINGLE = 0
+    HOLD = 1
 
 class Controller:
+
+    class Button:
+        def __init__(self, button, mode = Modes.HOLD):
+            self.button = button
+            self.mode =  mode
+        
+    
     # number = controller number
     def __init__(self, number, keyboard = False):
         # button enums
@@ -70,7 +84,7 @@ class Controller:
 
         pygame.event.get()
         ## axis control ##
-        for i in range( 2 ):
+        for i in range( NUM_AXIS ):
             axis = self.joystick.get_axis(i)
             if axis >= POS or axis == NEG:
                 if axis > 0 and i == 0:
