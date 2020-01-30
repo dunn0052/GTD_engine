@@ -90,14 +90,14 @@ class Controller:
         return set( map( (lambda button: button.button), newButtons ))
 
     def getKeys(self):
-        return None
         inputs = set()
-
+        print("got to keyboard")
         pygame.event.clear()
         keys = pygame.key.get_pressed()
         # keys pressed --> buttons
         if sum(keys):
-            map( (lambda key: inputs.add(self.buttonMap[key]) if keys[key] else None), self.buttonMap )
+            print("got keys")
+            inputs = set(map( (lambda key: self.buttonMap[key] if keys[key] else None), self.buttonMap.keys ))
 
         # find all the new inputs
         newButtons = inputs.difference(self.previousInputs)
