@@ -22,6 +22,7 @@ number = 0
 class Controller:
     # number = controller number
     def __init__(self, number, keyboard = False):
+        pygame.init()
         # button enums
         self.X = "X"
         self.A = "A"
@@ -48,7 +49,6 @@ class Controller:
         # access joystick number
         try:
             #init joystick
-            pygame.init()
             pygame.joystick.init()
             self.joystick = pygame.joystick.Joystick(number)
             self.joystick.init()
